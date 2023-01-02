@@ -9,9 +9,70 @@
 	<meta name=viewport content="width=device-width">
 	<link rel=stylesheet href=/css/main.css>
 	<link rel=stylesheet href=/web/account/style.css>
+	<script src=/web/account/app.js></script>
 </head>
 <body>
 <h1>Account</h1>
-<p>Sihe <a href=https://github.com/LFF5644/site-accountHtml>GitHub/site-accountHtml</a></p>
+<form onsubmit="ActionSubmit();return false;" id=form_main>
+	<p>
+		<label>
+			<input
+				type=radio
+				checked
+				name=radio_action
+				value=login
+				onchange="ActionChangeMode();"
+			>
+			Anmelden
+		</label>
+	</p>
+	<p>
+		<label>
+			<input
+				type=radio
+				name=radio_action
+				value=register
+				onchange="ActionChangeMode();"
+			>
+			Regestrieren
+		</label>
+	</p>
+
+	<p>
+		<label>
+			<span title=Username>Benutzername</span>: 
+			<input
+				id=input_username
+				name=username
+				placeholder=max_mustermann2008
+				type=text
+			>
+		</label>
+	</p>
+	<p id=p_nickname class=hidden>
+		<label>
+			<span title=Nickname>Anzeigename</span>: 
+			<input
+				id=input_nickname
+				name=nickname
+				placeholder="Max Mustermann"
+				type=text
+			>
+		</label>
+	</p>
+	<p>
+		<label>
+			Passwort: 
+			<input
+				type=password
+				id=input_password
+				name=password
+				placeholder=********
+			>
+		</label>
+	</p>
+	<button form=form_main id=button_submit>Anmelden</button>
+</form>
+
 </body>
 </html>
