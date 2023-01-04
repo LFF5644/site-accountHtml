@@ -1,5 +1,10 @@
 <?
-	//import libs;
+	const {
+		randomIndex,
+	}=globals.functions;
+	const service_account=service_require("server/account/account.new");
+	const {allowed,data}=service_account.authUserByInput(input);
+	let html="";
 ?><!DOCTYPE html>
 <!--CREATED: 2.1.2023 AT 17:13-->
 <html>
@@ -9,70 +14,102 @@
 	<meta name=viewport content="width=device-width">
 	<link rel=stylesheet href=/css/main.css>
 	<link rel=stylesheet href=/web/account/style.css>
-	<script src=/web/account/app.js></script>
+	<script src=/web/account/app_<?=!allowed?"formSubmit":"showAccount"?>.js></script>
 </head>
 <body>
-<h1>Account</h1>
-<form onsubmit="ActionSubmit();return false;" id=form_main>
-	<p>
-		<label>
-			<input
-				type=radio
-				checked
-				name=radio_action
-				value=login
-				onchange="ActionChangeMode();"
-			>
-			Anmelden
-		</label>
-	</p>
-	<p>
-		<label>
-			<input
-				type=radio
-				name=radio_action
-				value=register
-				onchange="ActionChangeMode();"
-			>
-			Regestrieren
-		</label>
-	</p>
+<?
+	if(!allowed){
+?><div>
+	<h1>Account</h1>
+	<form onsubmit="ActionSubmit();return false;" id=form_main>
+		<p>
+			<label>
+				<input
+					type=radio
+					checked
+					name=radio_action
+					value=login
+					onchange="ActionChangeMode();"
+				>
+				Anmelden
+			</label>
+		</p>
+		<p>
+			<label>
+				<input
+					type=radio
+					name=radio_action
+					value=register
+					onchange="ActionChangeMode();"
+				>
+				Regestrieren
+			</label>
+		</p>
 
-	<p>
-		<label>
-			<span title=Username>Benutzername</span>: 
-			<input
-				id=input_username
-				name=username
-				placeholder=max_mustermann2008
-				type=text
-			>
-		</label>
-	</p>
-	<p id=p_nickname class=hidden>
-		<label>
-			<span title=Nickname>Anzeigename</span>: 
-			<input
-				id=input_nickname
-				name=nickname
-				placeholder="Max Mustermann"
-				type=text
-			>
-		</label>
-	</p>
-	<p>
-		<label>
-			Passwort: 
-			<input
-				type=password
-				id=input_password
-				name=password
-				placeholder=********
-			>
-		</label>
-	</p>
-	<button form=form_main id=button_submit>Anmelden</button>
-</form>
+		<p>
+			<label>
+				<span title=Username>Benutzername</span>: 
+				<input
+					name=username
+					placeholder=max_mustermann2008
+					type=text
+					required
+				>
+			</label>
+		</p>
+		<p id=p_nickname class=hidden>
+			<label>
+				<span title=Nickname>Anzeigename</span>: 
+				<input
+					name=nickname
+					placeholder="Max Mustermann"
+					type=text
+				>
+			</label>
+		</p>
+		<p>
+			<label>
+				Passwort: 
+				<input
+					type=password
+					name=password
+					placeholder=********
+					required
+				>
+			</label>
+		</p>
+		<p>
+			<label>
+				<span title="Device Name">Gerätename</span>: 
+				<input
+					name=deviceName
+					placeholder="Maxs Laptop"
+					type=text
+					required
+				>
+			</label>
+		</p>
+		<button form=form_main id=button_submit>Anmelden</button>
+	</form>
+</div><?
+	}
+?><?loadDiv:{
+	if(!allowed){break loadDiv;}
+	const {account,tokenIndex}=data;
+	html="";
+	html+=`<div>\n\t<h1>Account</h1>\n`;
+	html+=`\t<p>Benutzername: ${account.username}</p>\n`;
+	html+=`\t<p>Anzeigename: ${account.nickname}</p>\n`;
+	html+=`\t<p>Passwort: <span title="Das ist nur fake keine angst">${Array(randomIndex(4)+4).fill("*").join("")}</span></p>\n`;
+	//html+=`\t\n`;
+	html+=`\t<p>Angemeldete Geräte: ${account.token.length}</p>\n`;
+	let index;
+	for(index in account.token){
+		const token=account.token[index];
+		html+=`\t<li${data.tokenIndex==index?" class=thisDevice":""} id=device_${token.created} onclick="if(confirm('wollen sie sich wirklich von '+this.innerText+' abmelden${data.tokenIndex==index?"\\n\\nDIES IST DIESES GERÄT!":""}')){LogoutDevice(${token.created})};">${token.deviceName?token.deviceName:"IP v6: "+token.lastIp}</li>\n`;
+	}
+	html+=`</div>`;
+}?><?=html?>
 
 </body>
 </html>
