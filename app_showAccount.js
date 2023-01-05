@@ -9,7 +9,10 @@ function callApi(args,data){
 		.then(res=>res.text())
 		.then(res=>HandleServerResponse(res,args.want,data))
 }
-function LogoutDevice(tokenCreated){
+function LogoutDevice(e,tokenCreated,thisDevice=false){
+	if(!confirm(`wollen sie sich wirklich von "${e.innerText}" abmelden${thisDevice?"\n\nDIES IST DIESES GERÄT!":""}`)){
+		return;
+	}
 	this.onclick=null;
 	callApi({
 		want:"LogoutDevice",

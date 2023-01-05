@@ -1,7 +1,10 @@
 <?
 	const {
 		randomIndex,
+		decodeUserAgent,
+		datify,
 	}=globals.functions;
+
 	const service_account=service_require("server/account/account.new");
 	const {allowed,data}=service_account.authUserByInput(input);
 	let html="";
@@ -11,7 +14,7 @@
 <html>
 <head>
 	<title>Account: Anmelden, Regestrieren, Geräte Übersicht</title>
-	<meta charset="utf-8">
+	<meta charset=utf-8>
 	<meta name=viewport content="width=device-width">
 	<link rel=stylesheet href=/css/main.css>
 	<link rel=stylesheet href=/web/account/style.css>
@@ -49,7 +52,7 @@
 
 		<p>
 			<label>
-				<span title=Username>Benutzername</span>: 
+				<span title=Username>Benutzername*</span>: 
 				<input
 					name=username
 					placeholder=max_mustermann2008
@@ -60,7 +63,7 @@
 		</p>
 		<p id=p_nickname class=hidden>
 			<label>
-				<span title=Nickname>Anzeigename</span>: 
+				<span title=Nickname>Anzeigename*</span>: 
 				<input
 					name=nickname
 					placeholder="Max Mustermann"
@@ -70,7 +73,7 @@
 		</p>
 		<p>
 			<label>
-				Passwort: 
+				Passwort*: 
 				<input
 					type=password
 					name=password
@@ -86,7 +89,6 @@
 					name=deviceName
 					placeholder="Maxs Laptop"
 					type=text
-					required
 				>
 			</label>
 		</p>
@@ -104,10 +106,11 @@
 	html+=`\t<p>Passwort: <span title="Das ist nur fake keine angst">${Array(randomIndex(4)+4).fill("*").join("")}</span></p>\n`;
 	//html+=`\t\n`;
 	html+=`\t<p>Angemeldete Geräte: ${account.token.length}</p>\n`;
+	const f="[day].[month].[year] => [hour]:[minute]";
 	let index;
 	for(index in account.token){
 		const token=account.token[index];
-		html+=`\t<li${data.tokenIndex==index?" class=thisDevice":""} id=device_${token.created} onclick="if(confirm('wollen sie sich wirklich von '+this.innerText+' abmelden${data.tokenIndex==index?"\\n\\nDIES IST DIESES GERÄT!":""}')){LogoutDevice(${token.created})};">${token.deviceName?token.deviceName:"IP v6: "+token.lastIp}</li>\n`;
+		html+=`\t<li${data.tokenIndex==index?" class=thisDevice":""} title="IPv6: '${token.lastIp}'&#10;Letzte Nutzung: ${datify(token.lastUse,f)}${token.deviceName?"&#10;Browser/Pc: "+decodeUserAgent(token.user_agent,true):""}" id=device_${token.created} onclick="LogoutDevice(this,${token.created}${data.tokenIndex==index?',true':""})">${token.deviceName?token.deviceName:decodeUserAgent(token.user_agent,true)}</li>\n`;
 	}
 	html+=`</div>`;
 }?><?=html?>
