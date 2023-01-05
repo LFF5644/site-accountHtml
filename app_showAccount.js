@@ -3,6 +3,7 @@ function callApi(args,data){
 	fetch("/server/account/account.api",{
 		method:"post",
 		headers:{"Content-Type":"application/json"},
+		credentials:"include",
 		body:JSON.stringify(args),
 	})
 		.then(res=>res.text())
