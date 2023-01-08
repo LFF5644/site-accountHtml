@@ -44,7 +44,7 @@ function HandleServerResponse(serverResponse,clientAction){
 		document.cookie=`token=${token};expires=Fri, 01 Jan 2100 00:00:00 GMT;path=/`
 		document.cookie=`deviceName=${document.getElementById("form_main").deviceName.value};expires=Fri, 01 Jan 2100 00:00:00 GMT;path=/`
 
-		alert((clientAction=="createAccount"?"Regestrieren":"Anmelden")+" Erfolgreich!\n\nÜbersicht wird geladen...");
+		alert((clientAction=="createAccount"?"Registrieren":"Anmelden")+" Erfolgreich!\n\nÜbersicht wird geladen...");
 		location.reload();
 		return true;
 	}
@@ -65,7 +65,7 @@ function ActionChangeMode(){
 		form.nickname.required=false;
 	}
 	else if(mode=="register"){
-		button_submit.innerText="Regestrieren";
+		button_submit.innerText="Registrieren";
 		p_nickname.className="";
 		form.nickname.required=true;
 
