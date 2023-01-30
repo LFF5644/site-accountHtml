@@ -3,6 +3,7 @@
 		randomIndex,
 		decodeUserAgent,
 		datify,
+		importHead,
 	}=globals.functions;
 
 	const service_account=service_require("server/account/account.new");
@@ -13,13 +14,17 @@
 <!--css inspiriert by l3p3.de/account-->
 <html>
 <head>
-	<title>Account: Anmelden, Registrieren, Geräte Übersicht</title>
-	<meta charset=utf-8>
-	<meta name=viewport content="width=device-width">
-	<link rel=stylesheet href=/css/main.css>
-	<link rel=stylesheet href=/web/account/style.css>
-	<script src=/web/account/app_<?=!allowed?"formSubmit":"showAccount"?>.js></script>
-</head>
+<?=importHead({
+	input,
+	title:"Account: Anmelden, Registrieren, Geräte Übersicht",
+	css:[
+		"/css/main.css",
+		"/web/account/style.css",
+	],
+	script:[
+		`/web/account/app_${!allowed?"formSubmit":"showAccount"}.js`,
+	],
+})?></head>
 <body>
 <?
 	if(!allowed){
@@ -87,7 +92,7 @@
 				<span title="Device Name">Gerätename</span>: 
 				<input
 					name=deviceName
-					placeholder="Maxs Laptop"
+					placeholder="Maxs <?=input.mobil?'Handy':'Laptop'?>"
 					type=text
 				>
 			</label>
@@ -110,10 +115,9 @@
 	let index;
 	for(index in account.token){
 		const token=account.token[index];
-		html+=`\t<li${data.tokenIndex==index?" class=thisDevice":""} title="IPv6: '${token.lastIp}'&#10;Letzte Nutzung: ${datify(token.lastUse,f)}${token.deviceName?"&#10;Browser/Pc: "+decodeUserAgent(token.user_agent,true):""}" id=device_${token.created} onclick="LogoutDevice(this,${token.created}${data.tokenIndex==index?',true':""})">${token.deviceName?token.deviceName:decodeUserAgent(token.user_agent,true)}</li>\n`;
+		html+=`\t<li${data.tokenIndex==index?" class=thisDevice":""} title="IPv4: '${token.lastIp}'&#10;Letzte Nutzung: ${datify(token.lastUse,f)}${token.deviceName?"&#10;Browser/Pc: "+decodeUserAgent(token.user_agent,true):""}" id=device_${token.created} onclick="LogoutDevice(this,${token.created}${data.tokenIndex==index?',true':""})">${token.deviceName?token.deviceName:decodeUserAgent(token.user_agent,true)}</li>\n`;
 	}
 	html+=`</div>`;
 }?><?=html?>
-
 </body>
 </html>
