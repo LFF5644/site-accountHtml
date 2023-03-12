@@ -8,4 +8,5 @@ account function of my web page
 - [ ] logout this
 - [ ] show device info (not in title)
 - [ ] use web frame work for better perfomence
-- [ ] may be this in IE8 (Internet Explorer 8) or Windows XP ?
+- [ ] firefox 48 compatieble (last firefox version for windows xp)
+- [ ] use socket
