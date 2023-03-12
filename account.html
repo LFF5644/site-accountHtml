@@ -22,7 +22,7 @@
 		"/web/account/style.css",
 	],
 	script:[
-		`/web/account/app_${!allowed?"formSubmit":"showAccount"}.js`,
+		`/web/account/app_${!allowed?"formSubmit":"showAccount"}.js${(allowed&&input.goto)?("?goto="+ESC(input.goto)):""}`,
 	],
 })?></head>
 <body>

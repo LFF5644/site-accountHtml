@@ -1,4 +1,3 @@
-
 function callApi(args,data){
 	fetch("/server/account/account.api",{
 		method:"post",
@@ -40,3 +39,18 @@ function HandleServerResponse(serverResponse,clientAction,args){
 	}
 	console.log(serverResponse);
 }
+
+<?
+	const {codeify}=globals.functions;
+	if(input.goto){
+		let goto=codeify(input.goto);
+		while(goto.startsWith("/")){
+			goto=goto.substring(1);
+		}
+		?>
+			if(confirm("Möchtest du zu "+location.host.toUpperCase()+"/<?=goto?> springen!")){
+				location.href="/<?=goto?>";
+			}
+		<?
+	}
+?>
