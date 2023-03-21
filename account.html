@@ -108,7 +108,6 @@
 	html+=`<div>\n\t<h1>Account</h1>\n`;
 	html+=`\t<p>Benutzername: ${account.username}</p>\n`;
 	html+=`\t<p>Anzeigename: ${account.nickname}</p>\n`;
-	html+=`\t<p>Passwort: <span title="Das ist nur fake keine angst">${Array(randomIndex(4)+4).fill("*").join("")}</span></p>\n`;
 	//html+=`\t\n`;
 	html+=`\t<p>Angemeldete Geräte: ${account.token.length}</p>\n`;
 	const f="[day].[month].[year] => [hour]:[minute]";
