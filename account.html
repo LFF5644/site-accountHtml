@@ -10,113 +10,114 @@
 	const {allowed,data}=service_account.authUserByInput(input);
 	let html="";
 ?><!DOCTYPE html>
-<!--CREATED: 2.1.2023 AT 17:13-->
-<!--css inspiriert by l3p3.de/account-->
+<!--CREATED: 02.01.2023 AT 17:13-->
+<!--UPDATED: 20.04.2023 AT 13:06-->
 <html>
-<head>
-<?=importHead({
-	input,
-	title:"Account: Anmelden, Registrieren, Geräte Übersicht",
-	css:[
-		"/css/main.css",
-		"/web/account/style.css",
-	],
-	script:[
-		`/web/account/app_${!allowed?"formSubmit":"showAccount"}.js${(allowed&&input.goto)?("?goto="+ESC(input.goto)):""}`,
-	],
-})?></head>
-<body>
-<?
-	if(!allowed){
-?><div>
-	<h1>Account</h1>
-	<form onsubmit="ActionSubmit();return false;" id=form_main>
-		<p>
-			<label>
-				<input
-					type=radio
-					checked
-					name=radio_action
-					value=login
-					onchange="ActionChangeMode();"
-				>
-				Anmelden
-			</label>
-		</p>
-		<p>
-			<label>
-				<input
-					type=radio
-					name=radio_action
-					value=register
-					onchange="ActionChangeMode();"
-				>
-				Registrieren
-			</label>
-		</p>
+	<head>
+		<?=importHead({
+			input,
+			title:"Account: Anmelden, Registrieren, Geräte Übersicht",
+			css:[
+				"/css/main.css",
+				"/web/account/style.css",
+			],
+			script:[
+				`/web/account/app_${!allowed?"formSubmit":"showAccount"}.js${(allowed&&input.goto)?("?goto="+ESC(input.goto)):""}`,
+			],
+		})?>
+	</head>
+	<body>
+		<?
+			if(!allowed){
+		?><div>
+			<h1>Account</h1>
+			<form onsubmit="ActionSubmit();return false;" id=form_main>
+				<p>
+					<label>
+						<input
+							type=radio
+							checked
+							name=radio_action
+							value=login
+							onchange="ActionChangeMode();"
+						>
+						Anmelden
+					</label>
+				</p>
+				<p>
+					<label>
+						<input
+							type=radio
+							name=radio_action
+							value=register
+							onchange="ActionChangeMode();"
+						>
+						Registrieren
+					</label>
+				</p>
 
-		<p>
-			<label>
-				<span title=Username>Benutzername*</span>: 
-				<input
-					name=username
-					placeholder=max_mustermann2008
-					type=text
-					required
-				>
-			</label>
-		</p>
-		<p id=p_nickname class=hidden>
-			<label>
-				<span title=Nickname>Anzeigename*</span>: 
-				<input
-					name=nickname
-					placeholder="Max Mustermann"
-					type=text
-				>
-			</label>
-		</p>
-		<p>
-			<label>
-				Passwort*: 
-				<input
-					type=password
-					name=password
-					placeholder=********
-					required
-				>
-			</label>
-		</p>
-		<p>
-			<label>
-				<span title="Device Name">Gerätename</span>: 
-				<input
-					name=deviceName
-					placeholder="Maxs <?=input.mobil?'Handy':'Laptop'?>"
-					type=text
-				>
-			</label>
-		</p>
-		<button form=form_main id=button_submit>Anmelden</button>
-	</form>
-</div><?
-	}
-?><?loadDiv:{
-	if(!allowed){break loadDiv;}
-	const {account,tokenIndex}=data;
-	html="";
-	html+=`<div>\n\t<h1>Account</h1>\n`;
-	html+=`\t<p>Benutzername: ${account.username}</p>\n`;
-	html+=`\t<p>Anzeigename: ${account.nickname}</p>\n`;
-	//html+=`\t\n`;
-	html+=`\t<p>Angemeldete Geräte: ${account.token.length}</p>\n`;
-	const f="[day].[month].[year] => [hour]:[minute]";
-	let index;
-	for(index in account.token){
-		const token=account.token[index];
-		html+=`\t<li${data.tokenIndex==index?" class=thisDevice":""} title="IPv4: '${token.lastIp}'&#10;Letzte Nutzung: ${datify(token.lastUse,f)}${token.deviceName?"&#10;Browser/Pc: "+decodeUserAgent(token.user_agent,true):""}" id=device_${token.created} onclick="LogoutDevice(this,${token.created}${data.tokenIndex==index?',true':""})">${token.deviceName?token.deviceName:decodeUserAgent(token.user_agent,true)}</li>\n`;
-	}
-	html+=`</div>`;
-}?><?=html?>
-</body>
+				<p>
+					<label>
+						<span title=Username>Benutzername*</span>: 
+						<input
+							name=username
+							placeholder=max_mustermann2008
+							type=text
+							required
+						>
+					</label>
+				</p>
+				<p id=p_nickname class=hidden>
+					<label>
+						<span title=Nickname>Anzeigename*</span>: 
+						<input
+							name=nickname
+							placeholder="Max Mustermann"
+							type=text
+						>
+					</label>
+				</p>
+				<p>
+					<label>
+						Passwort*: 
+						<input
+							type=password
+							name=password
+							placeholder=********
+							required
+						>
+					</label>
+				</p>
+				<p>
+					<label>
+						<span title="Device Name">Gerätename</span>: 
+						<input
+							name=deviceName
+							value=<?=input.mobil?'Handy':'Laptop'?>
+							type=text
+						>
+					</label>
+				</p>
+				<button form=form_main id=button_submit>Anmelden</button>
+			</form>
+		</div><?
+		}?><?loadDiv:{
+			if(!allowed){break loadDiv;}
+			const {account,tokenIndex}=data;
+			const tabs="\t\t\t";
+			html="";
+			html+=`<div>\n${tabs}<h1>Account</h1>\n`;
+			html+=`${tabs}<p>Benutzername: ${account.username}</p>\n`;
+			html+=`${tabs}<p>Anzeigename: ${account.nickname}</p>\n`;
+			//html+=`${tabs}\n`;
+			html+=`${tabs}<p>Angemeldete Geräte: ${account.token.length}</p>\n`;
+			const f="[day].[month].[year] => [hour]:[minute]";
+			let index;
+			for(index in account.token){
+				const token=account.token[index];
+				html+=`${tabs}<li${data.tokenIndex==index?" class=thisDevice":""} title="IPv4: '${token.lastIp}'&#10;Letzte Nutzung: ${datify(token.lastUse,f)}${token.deviceName?"&#10;Browser/Pc: "+decodeUserAgent(token.user_agent,true):""}" id=device_${token.created} onclick="LogoutDevice(this,${token.created}${data.tokenIndex==index?',true':""})">${token.deviceName?token.deviceName:decodeUserAgent(token.user_agent,true)}</li>\n`;
+			}
+			html+=`\t\t</div>`;
+		}?><?=html?>
+	</body>
 </html>
